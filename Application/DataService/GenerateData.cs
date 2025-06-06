@@ -32,7 +32,7 @@ namespace mts_integration.Application.DataService
                 {
                     var device = data[i];
 
-                    var filtered = device.Briefs.GroupBy(x => x.EUI).Where(g => g.Count() == 1).Select(g => g.First()).ToList();
+                    var filtered = device.Briefs.GroupBy(x => x.EUI).Select(g => g.First()).ToList();
 
                     foreach (var brief in filtered)
                     {
