@@ -1,6 +1,8 @@
 ﻿using mts_integration.Application.AuthService;
 using mts_integration.Application.DataService;
+using mts_integration.Application.DataService.CachingServirce.Redis;
 using mts_integration.RestAPI;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +13,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+builder.Services.AddMemoryCache();
+
+
 builder.Services.AddHttpClient<AuthService>();
 builder.Services.AddHttpClient<IApiDataProvider, ApiDataProvider>();
 builder.Services.AddSingleton<IGenerateData, GenerateData>();
+builder.Services.AddSingleton<IDataCacheService, DataCacheService>();
+
+
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp => ConnectionMultiplexer.Connect("localhost:6379,abortConnect=false"));
+builder.Services.AddSingleton<RedisBackupService>();
+builder.Services.AddHostedService<RedisAutoBackupWorker>();
+
+
 
 builder.Services.AddCors(options =>
 {
@@ -27,6 +42,7 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
 
 app.UseCors("AllowAll");
 

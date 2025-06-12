@@ -8,9 +8,12 @@ namespace mts_integration.RestAPI
         /// Gets the export result as a byte array.
         /// </summary>
         /// <returns>A byte array representing the export data.</returns>
+        /// 
+        Task<int> GetDevicesDataLength();
+
         Task<List<DtoDevicesData>> GetDevicesData();
 
-        Task<List<string>> GetDevicesDataName(string item);
+        Task<string> GetDevicesDataByUrl(string item, bool IsAuthenticated);
     }
 
 }

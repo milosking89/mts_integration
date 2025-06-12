@@ -14,5 +14,11 @@ namespace mts_integration.DTO
 
         public string lastCellID { get; set; }
 
+        public NetworkSubscriptionDto NetworkSubscription { get; set; } = new();
+    }
+
+    public class NetworkSubscriptionDto
+    {
+        public string href { get; set; }
     }
 }

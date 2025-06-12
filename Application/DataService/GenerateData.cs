@@ -40,8 +40,8 @@ namespace mts_integration.Application.DataService
                         worksheet.Cell(currentRow, 2).Value = brief.nwAddress;
                         worksheet.Cell(currentRow, 3).Value = brief.name;
                         worksheet.Cell(currentRow, 4).Value = brief.connectivity;
-                        worksheet.Cell(currentRow, 6).Value = brief.appServersRoutingProfile["ID"];
-                        worksheet.Cell(currentRow, 7).Value = brief.appServersRoutingProfile["name"];
+                        worksheet.Cell(currentRow, 5).Value = brief.appServersRoutingProfile["ID"];
+                        worksheet.Cell(currentRow, 6).Value = brief.appServersRoutingProfile["name"];
                         currentRow++;
                     }
                 }
@@ -70,12 +70,15 @@ namespace mts_integration.Application.DataService
 
                 int currentRow = 2;
 
-                worksheet.Cell(currentRow, 1).Value = data[0].name;
-                worksheet.Cell(currentRow, 2).Value = data[0].EUI;
-                worksheet.Cell(currentRow, 3).Value = data[0].imsi;
-                worksheet.Cell(currentRow, 4).Value = data[0].nwAddress;
-                worksheet.Cell(currentRow, 5).Value = data[0].lastCellID;
-
+                for (int i = 0; i < data.Count; i++)
+                {
+                    worksheet.Cell(currentRow, 1).Value = data[i].name;
+                    worksheet.Cell(currentRow, 2).Value = data[i].EUI;
+                    worksheet.Cell(currentRow, 3).Value = data[i].imsi;
+                    worksheet.Cell(currentRow, 4).Value = data[i].nwAddress;
+                    worksheet.Cell(currentRow, 5).Value = data[i].lastCellID;
+                    currentRow++;
+                }
 
                 using (var stream = new MemoryStream())
                 {

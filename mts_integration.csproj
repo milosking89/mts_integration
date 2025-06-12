@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="iTextSharp" Version="5.5.13.4" />
+    <PackageReference Include="StackExchange.Redis" Version="2.8.41" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
