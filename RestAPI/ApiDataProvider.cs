@@ -103,42 +103,54 @@ namespace mts_integration.RestAPI
 
             string responseBody = "";
 
-            for (var i = 0; i < chunks.Count; i++)
+            while(more)
             {
-                string urlWithParams = $"{url}?pageIndex={i}&pageSize={chunks[i]}";
+                if (pageIndex == 10)
+                {
+                     token = await _authService.GetAccessTokenAsync();
+                    _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    _httpClient.DefaultRequestHeaders.Accept.Clear();
+                    _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                }
+
+                //string urlWithParams = $"{url}?pageIndex={i}&pageSize={chunks[i]}";
+
+                string urlWithParams = $"{url}?pageIndex={pageIndex}&pageSize={pageSize}";
 
                 try
                 {
                     HttpResponseMessage response = await _httpClient.GetAsync(urlWithParams);
+
+                    await Task.Delay(2000); // dodaj pauzu od 200ms
 
                     if (response.IsSuccessStatusCode)
                     {
                         response.EnsureSuccessStatusCode();
                         responseBody = await response.Content.ReadAsStringAsync();
                     }
-                    else
-                    {
-                        Console.WriteLine(response);
-                        Console.WriteLine(pageIndex);
+                    //else
+                    //{
+                    //    Console.WriteLine(response);
+                    //    Console.WriteLine(pageIndex);
 
-                        if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
-                        {
-                            pageSize = contentLength % pageSize;
+                    //    if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                    //    {
+                    //        pageSize = contentLength % pageSize;
 
-                            var newUrl = $"{url}?&pageSize={pageSize}";
-                            HttpResponseMessage responseNew = await _httpClient.GetAsync(newUrl);
-                            if (responseNew.IsSuccessStatusCode)
-                            {
-                                responseNew.EnsureSuccessStatusCode();
-                                responseBody = await responseNew.Content.ReadAsStringAsync();
-                                more = false;
-                            }
-                        }
-                        else
-                        {
-                            return allDevices;
-                        }
-                    }
+                    //        var newUrl = $"{url}?&pageSize={pageSize}";
+                    //        HttpResponseMessage responseNew = await _httpClient.GetAsync(newUrl);
+                    //        if (responseNew.IsSuccessStatusCode)
+                    //        {
+                    //            responseNew.EnsureSuccessStatusCode();
+                    //            responseBody = await responseNew.Content.ReadAsStringAsync();
+                    //            more = false;
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        return allDevices;
+                    //    }
+                    //}
                 }
                 catch (HttpRequestException ex)
                 {
@@ -153,6 +165,9 @@ namespace mts_integration.RestAPI
                 {
                     PropertyNameCaseInsensitive = true
                 });
+
+                more = result.More;
+                pageIndex++;
 
                 allDevices.Add(result);
             }

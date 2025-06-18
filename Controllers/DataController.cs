@@ -44,7 +44,6 @@ namespace mts_integration.Controllers
         [HttpGet("getDeviceData")]
         public async Task<IActionResult> GetDeviceData()
         {
-
             var data = new List<BriefDto>();
             var fetchData = new List<DtoDevicesData>();
 
